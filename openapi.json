@@ -1,0 +1,175 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "LinkPreview Global - Universal Link Preview & OpenGraph API",
+    "description": "High-accuracy web metadata extractor for frontend developers, chat applications, social platforms, and CMS tools. Solves browser CORS limitations by extracting page title, description, OpenGraph preview images, favicons, canonical URLs, author, and site name in sub-150ms.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "API Support - VIBE NOW",
+      "email": "vineetmaindola@gmail.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://linkpreview-api.onrender.com",
+      "description": "Live Production Cloud Server"
+    }
+  ],
+  "paths": {
+    "/v1/extract": {
+      "get": {
+        "summary": "Extract Link Preview (GET)",
+        "description": "Fetches any target web page and extracts OpenGraph image, title, description, favicon, and canonical URL.",
+        "operationId": "extractMetadataGet",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": true,
+            "description": "Target website URL (e.g., https://github.com or https://stripe.com)",
+            "schema": {
+              "type": "string",
+              "example": "https://github.com"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rich link preview metadata object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "url": { "type": "string", "example": "https://github.com" },
+                    "domain": { "type": "string", "example": "github.com" },
+                    "title": { "type": "string", "example": "GitHub: Let's build from here" },
+                    "description": { "type": "string", "example": "GitHub is where over 100 million developers shape the future of software..." },
+                    "image": { "type": "string", "example": "https://github.githubassets.com/assets/campaign-social-031d6161fa10.png" },
+                    "favicon": { "type": "string", "example": "https://github.githubassets.com/favicons/favicon.svg" },
+                    "site_name": { "type": "string", "example": "GitHub" },
+                    "type": { "type": "string", "example": "website" },
+                    "canonical_url": { "type": "string", "example": "https://github.com" },
+                    "author": { "type": "string", "nullable": true, "example": null },
+                    "word_count": { "type": "integer", "example": 320 },
+                    "estimated_read_time_minutes": { "type": "integer", "example": 2 },
+                    "cached": { "type": "boolean", "example": false },
+                    "latency_ms": { "type": "number", "example": 84.5 }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing URL query parameter"
+          },
+          "422": {
+            "description": "Target website unreachable or invalid URL"
+          }
+        }
+      },
+      "post": {
+        "summary": "Extract Link Preview (POST JSON)",
+        "description": "JSON payload extraction for webhooks and backend microservices.",
+        "operationId": "extractMetadataPost",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["url"],
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "example": "https://stripe.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Extracted metadata object"
+          }
+        }
+      }
+    },
+    "/v1/batch-extract": {
+      "post": {
+        "summary": "Batch Link Preview Extraction",
+        "description": "Extracts previews for up to 20 URLs concurrently in a single call.",
+        "operationId": "batchExtractPost",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["urls"],
+                "properties": {
+                  "urls": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "example": [
+                      "https://github.com",
+                      "https://news.ycombinator.com",
+                      "https://python.org"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Batch extraction results array",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total_submitted": { "type": "integer", "example": 3 },
+                    "total_successful": { "type": "integer", "example": 3 },
+                    "batch_latency_ms": { "type": "number", "example": 210.4 },
+                    "results": {
+                      "type": "array",
+                      "items": { "type": "object" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health Check Probe",
+        "description": "Service uptime probe for RapidAPI monitoring and Cloud pingers.",
+        "operationId": "getHealth",
+        "responses": {
+          "200": {
+            "description": "Service is operational",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "healthy" },
+                    "service": { "type": "string", "example": "LinkPreview Global API" },
+                    "uptime": { "type": "string", "example": "99.99%" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

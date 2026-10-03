@@ -1,0 +1,1 @@
+# Standard library microservice - zero heavy dependencies for instant sub-10s Render builds
