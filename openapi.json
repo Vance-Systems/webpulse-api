@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "LinkPreview Global - Universal Link Preview & OpenGraph API",
-    "description": "High-accuracy web metadata extractor for frontend developers, chat applications, social platforms, and CMS tools. Solves browser CORS limitations by extracting page title, description, OpenGraph preview images, favicons, canonical URLs, author, and site name in sub-150ms.",
+    "title": "WebPulse Global - SEO, OpenGraph & Link Preview API",
+    "description": "High-speed URL metadata, OpenGraph, Twitter Cards, Favicon, and Web Health extractor for frontend applications (React, Next.js, Vue), chat systems, CMS tools, and SEO crawlers. Solves browser CORS limitations with sub-150ms response times and intelligent 1-hour in-memory caching.",
     "version": "1.0.0",
     "contact": {
       "name": "API Support - VIBE NOW",
@@ -11,15 +11,15 @@
   },
   "servers": [
     {
-      "url": "https://linkpreview-api.onrender.com",
+      "url": "https://webpulse-api-r529.onrender.com",
       "description": "Live Production Cloud Server"
     }
   ],
   "paths": {
     "/v1/extract": {
       "get": {
-        "summary": "Extract Link Preview (GET)",
-        "description": "Fetches any target web page and extracts OpenGraph image, title, description, favicon, and canonical URL.",
+        "summary": "Extract Link Preview & SEO Metadata (GET)",
+        "description": "Fetches target web page and extracts OpenGraph image, title, description, favicon, canonical URL, author, and reading time.",
         "operationId": "extractMetadataGet",
         "parameters": [
           {
@@ -46,12 +46,11 @@
                     "domain": { "type": "string", "example": "github.com" },
                     "title": { "type": "string", "example": "GitHub: Let's build from here" },
                     "description": { "type": "string", "example": "GitHub is where over 100 million developers shape the future of software..." },
-                    "image": { "type": "string", "example": "https://github.githubassets.com/assets/campaign-social-031d6161fa10.png" },
+                    "image": { "type": "string", "example": "https://images.ctfassets.net/.../GH-Homepage-Universe-img.png" },
                     "favicon": { "type": "string", "example": "https://github.githubassets.com/favicons/favicon.svg" },
                     "site_name": { "type": "string", "example": "GitHub" },
                     "type": { "type": "string", "example": "website" },
                     "canonical_url": { "type": "string", "example": "https://github.com" },
-                    "author": { "type": "string", "nullable": true, "example": null },
                     "word_count": { "type": "integer", "example": 320 },
                     "estimated_read_time_minutes": { "type": "integer", "example": 2 },
                     "cached": { "type": "boolean", "example": false },
@@ -60,12 +59,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Missing URL query parameter"
-          },
-          "422": {
-            "description": "Target website unreachable or invalid URL"
           }
         }
       },
@@ -126,23 +119,7 @@
         },
         "responses": {
           "200": {
-            "description": "Batch extraction results array",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "total_submitted": { "type": "integer", "example": 3 },
-                    "total_successful": { "type": "integer", "example": 3 },
-                    "batch_latency_ms": { "type": "number", "example": 210.4 },
-                    "results": {
-                      "type": "array",
-                      "items": { "type": "object" }
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Batch extraction results array"
           }
         }
       }
@@ -154,19 +131,7 @@
         "operationId": "getHealth",
         "responses": {
           "200": {
-            "description": "Service is operational",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": { "type": "string", "example": "healthy" },
-                    "service": { "type": "string", "example": "LinkPreview Global API" },
-                    "uptime": { "type": "string", "example": "99.99%" }
-                  }
-                }
-              }
-            }
+            "description": "Service is operational"
           }
         }
       }
